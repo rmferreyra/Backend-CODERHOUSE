@@ -1,0 +1,137 @@
+[
+  {
+    "title": "Montana",
+    "descripcion": "Tour por Alta Montaña con degustaciones varias",
+    "price": 9500,
+    "thumbnail": "./images/altaMontana.jpg",
+    "code": "almo01",
+    "stock": 2,
+    "id": 1
+  },
+  {
+    "title": "Bodega",
+    "descripcion": "Paseo y almuerzo por bodega",
+    "price": 15000,
+    "thumbnail": "./images/bodega.jpg",
+    "code": "bode01",
+    "stock": 1,
+    "id": 2
+  },
+  {
+    "title": "City",
+    "descripcion": "City Tour con almuerzo",
+    "price": 12000,
+    "thumbnail": "./images/city.jpg",
+    "code": "city01",
+    "stock": 1,
+    "id": 3
+  },
+  {
+    "title": "Montana",
+    "descripcion": "Tour por Alta Montaña con degustaciones varias",
+    "price": 8500,
+    "thumbnail": "./images/altaMontana.jpg",
+    "code": "almo01",
+    "stock": 1,
+    "id": 4
+  },
+  {
+    "title": "Bodega",
+    "descripcion": "Paseo y almuerzo por bodega",
+    "price": 15000,
+    "thumbnail": "./images/bodega.jpg",
+    "code": "bode01",
+    "stock": 1,
+    "id": 5
+  },
+  {
+    "title": "City",
+    "descripcion": "City Tour con almuerzo",
+    "price": 12000,
+    "thumbnail": "./images/city.jpg",
+    "code": "city01",
+    "stock": 1,
+    "id": 6
+  },
+  {
+    "title": "Montana",
+    "descripcion": "Tour por Alta Montaña con degustaciones varias",
+    "price": 8500,
+    "thumbnail": "./images/altaMontana.jpg",
+    "code": "almo01",
+    "stock": 1,
+    "id": 7
+  },
+  {
+    "title": "Bodega",
+    "descripcion": "Paseo y almuerzo por bodega",
+    "price": 15000,
+    "thumbnail": "./images/bodega.jpg",
+    "code": "bode01",
+    "stock": 1,
+    "id": 8
+  },
+  {
+    "title": "City",
+    "descripcion": "City Tour con almuerzo",
+    "price": 12000,
+    "thumbnail": "./images/city.jpg",
+    "code": "city01",
+    "stock": 1,
+    "id": 9
+  },
+  {
+    "title": "Montana",
+    "descripcion": "Tour por Alta Montaña con degustaciones varias",
+    "price": 8500,
+    "thumbnail": "./images/altaMontana.jpg",
+    "code": "almo01",
+    "stock": 1,
+    "id": 10
+  },
+  {
+    "title": "Bodega",
+    "descripcion": "Paseo y almuerzo por bodega",
+    "price": 15000,
+    "thumbnail": "./images/bodega.jpg",
+    "code": "bode01",
+    "stock": 1,
+    "id": 11
+  },
+  {
+    "title": "City",
+    "descripcion": "City Tour con almuerzo",
+    "price": 12000,
+    "thumbnail": "./images/city.jpg",
+    "code": "city01",
+    "stock": 1,
+    "id": 12
+  },
+  {
+    "title": "Montana",
+    "descripcion": "Tour por Alta Montaña con degustaciones varias",
+    "price": 8500,
+    "thumbnail": "./images/altaMontana.jpg",
+    "code": "almo01",
+    "stock": 1,
+    "id": 13
+  },
+  {
+    "title": "Bodega",
+    "descripcion": "Paseo y almuerzo por bodega",
+    "price": 15000,
+    "thumbnail": "./images/bodega.jpg",
+    "code": "bode01",
+    "stock": 1,
+    "id": 14
+  },
+  {
+    "title": "City",
+    "descripcion": "City Tour con almuerzo",
+    "price": 12000,
+    "thumbnail": "./images/city.jpg",
+    "code": "city01",
+    "stock": 1,
+    "id": 15
+  }
+]
