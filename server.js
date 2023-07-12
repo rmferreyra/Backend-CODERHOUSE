@@ -28,6 +28,8 @@ app.get('/usuarios', (req, res) => {
 app.get('/productos/:id', async (req, res) => {
   const { id } = req.params
 
+  const products = await productManager.getProducts()
+
   for (const p of products) {
     if (p.id == id) {
       res.send(p)
@@ -42,6 +44,7 @@ app.get('/productos/:id', async (req, res) => {
 app.get('/productos', async (req, res) => {
   const { search, max, min, limit } = req.query
   console.log(`Buscando productos con ${search} y entre [${min}, ${max}]`)
+  
   const products = await productManager.getProducts()
 
   console.log(products.length)
@@ -56,6 +59,10 @@ app.get('/productos', async (req, res) => {
 
   if (min || max) {
     filtrados = filtrados.filter(p => p.price >= (+min || 0) && p.price <= (+max || Infinity))
+  }
+
+  if (limit) {
+    filtrados = filtrados.slice(0, +limit);
   }
 
   res.send(filtrados)

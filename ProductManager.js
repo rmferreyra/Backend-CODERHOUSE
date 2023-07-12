@@ -33,16 +33,16 @@ class ProductManager {
         return productos
     }
 
-//     async getProductById(id){
-//         const data = await fs.readFile(this.filepath, 'utf-8')
-//         const productos = JSON.parse(data)
+    async getProductById(id){
+        const data = await fs.readFile(this.filepath, 'utf-8')
+        const productos = JSON.parse(data)
         
-//         const searchResult = productos.find((el) => el.id === id);
+        const searchResult = productos.find((el) => el.id === id);
     
-//         let respuesta = searchResult??"NOT FOUND"
+        let respuesta = searchResult??"NOT FOUND"
    
-//         return respuesta;        
-//     }
+        return respuesta;        
+    }
 
 //     async deleteProduct(id){
 //         const data = await fs.readFile(this.filepath, 'utf-8')
@@ -70,7 +70,7 @@ class ProductManager {
 //       }
 //     }
   
-//   const producto1 = new ProductManager(path.join(__dirname,'productos.json'));
+  // const producto1 = new ProductManager(path.join(__dirname,'productos.json'));
   
 //   async function main(){
 //   await producto1.addProduct({
