@@ -1,17 +1,19 @@
 {
-  "name": "desafio2",
+  "name": "desafio4",
   "version": "1.0.0",
-  "description": "2doDesafioEntregable",
-  "main": "index.js",
+  "description": "4toDesafioEntregable",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon src/app.js"
   },
   "author": "Rodolfo M. Ferreyra",
   "license": "ISC",
   "keywords": [],
   "dependencies": {
     "express": "^4.18.2",
-    "nodemon": "^3.0.1"
+    "express-handlebars": "^7.0.7",
+    "nodemon": "^3.0.1",
+    "socket.io": "^4.7.1"
   }
 }

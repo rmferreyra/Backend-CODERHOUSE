@@ -13,6 +13,7 @@ app.use(express.json())
 
 // app.use('/', home) 
 app.use('/api', routes)
+app.use('/api', cartsRouter)
 
 const port = 8080
 
