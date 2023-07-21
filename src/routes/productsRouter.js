@@ -1,89 +1,76 @@
-  const { Router } = require('express')
-  const ProductManager = require('../../managers/ProductManager')
+const express = require('express')
+const router = express.Router()
+const ProductManager = require('../../managers/ProductManager')
+const productManager = new ProductManager('productos.json')
 
-  const productManager = new ProductManager('productos.json')
-  const router = Router()
+router.get('/products', async (req, res) => {
+  const { search, max, min, limit } = req.query
+  console.log(`Searching products for ${search} max ${max} and min ${min}`)
 
-  router.get('/:id', async (req, res) => {
-      const { id } = req.params
-    
-      const product = await productManager.getById(id)
-    
-      if(!product) {
-        res.sendStatus(404)
-        return
-      }
-    
-      res.send(product)
-    
-    })
-    
-    router.get('/', async (req, res) => {
-      const { search, max, min, limit } = req.query
-      console.log(`Buscando productos con ${search} y entre [${min}, ${max}]`)
-      
-      const products = await productManager.getAll()
-    
-      let filtrados = products
-    
-      if (search) {
+  const products = await productManager.getProducts()
 
-        filtrados = filtrados
-          .filter(p => p.keywords.includes(search.toLowerCase()) || p.title.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase()))
-      } 
-    
-      if (min || max) {
-        filtrados = filtrados.filter(p => p.price >= (+min || 0) && p.price <= (+max || Infinity))
-      }
-    
-      if (limit) {
-        filtrados = filtrados.slice(0, +limit);
-      }
-    
-      res.send(filtrados)
-    })
-    
-    router.post('/', async (req, res) => {
-      const { body } = req
-    
-      const product = await productManager.create(body)
-    
-      res.status(201).send(product)
-    })
-    
-    router.delete('/:id', async (req, res) => {
-      const { id } = req.params
-      if (!await productManager.getById(id)) {
-        res.sendStatus(404)
-        return
-      }
-    
-      await productManager.delete(id)
-    
-      res.sendStatus(200)
-    })
-    
-    router.put('/:id', async (req, res) => {
-      const { id } = req.params
-      const { body } = req
-    
-    try {
-      if (!await productManager.getById(id)) {
-        res.sendStatus(404)
-        return
-      }
-      
-      await productManager.save(id, body)
-      res.sendStatus(202)
-    
-    } catch(e) {
-      console.log(e)
-      res.sendStatus(500).send({
-        message: "Ha ocurrido un error en el Servidor",
-        exception: e.stack
-      })
+  let filtrados = products
+  if (search){
+    filtrados = filtrados
+    .filter(p => p.keywords.includes(search.toLowerCase) || p.title.includes(search.toLowerCase) || p.description.includes(search.toLowerCase))
+  }
+
+  if (min || max) {
+    filtrados = filtrados.filter(p => p.price >= (min || 0) && p.price <= (max || Infinity))
+  }
+
+  if(limit) {
+    filtrados = filtrados.slice(0, limit)
+  }
+
+  await(res.send(filtrados))
+})
+router.get('/products/:id', async (req, res) => {
+  const id = req.params.id
+  
+  const products = await productManager.getProducts()
+
+  for (const p of products){
+    if (p.id == id){
+      res.send(p)
+      return
     }
-    
-    })
+  }
+  await(res.send('Product not found'))
+})
 
-    module.exports = router
+router.post('/products', async (req, res) => {
+  const product = req.body
+
+  try {
+    await productManager.addProduct(product)
+    res.status(201).json({ message: 'Producto agregado con exito' })
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+})
+
+router.put('/products/:id', async (req, res) => {
+  const { id } = req.params
+  const updatedFields = req.body
+
+  try {
+    await productManager.updateProduct(id, updatedFields)
+    res.json({ message: 'Producto actualizado con exito' })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})
+
+router.delete('/products/:id', async (req, res) => {
+  const { id } = req.params
+
+  try {
+    await productManager.deleteProduct(id)
+    res.json({ message: 'Producto eliminado con exito' })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})
+
+module.exports = router

@@ -2,11 +2,11 @@ const socket = io()
 
 const productName = document.getElementById("title").value
 const productDescription = document.getElementById("description").value
-const productCode = document.getElementById("code").value
 const productPrice = document.getElementById("price").value
-const productStock = document.getElementById("stock").value
-const productCategory = document.getElementById("category").value
 const productThumbnails = document.getElementById("thumbnails").value
+const productCode = document.getElementById("code").value
+const productStock = document.getElementById("stock").value
+const productKeywords = document.getElementById("keywords").value
 const productStatus = document.getElementById("status").value
 
 async function addNewProduct() {
@@ -20,12 +20,11 @@ async function addNewProduct() {
       body: JSON.stringify({
         title: productName,
         description: productDescription,
-        code: productCode,
         price: productPrice,
-        status: productStatus,
+        thumbnails: productThumbnails,
+        code: productCode,
         stock: productStock,
-        category: productCategory,
-        thumbnails: productThumbnails
+        keywords: productKeywords,
       })
     })
 
@@ -36,12 +35,11 @@ async function addNewProduct() {
       socket.emit('addProduct', {
         title: productName,
         description: productDescription,
-        code: productCode,
         price: productPrice,
-        status: productStatus,
+        thumbnails: productThumbnails,
+        code: productCode,
         stock: productStock,
-        category: productCategory,
-        thumbnails: productThumbnails
+        keywords: productKeywords,
       })
 
       document.getElementById("new-product-form").reset()

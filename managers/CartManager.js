@@ -46,7 +46,7 @@ class CartManager {
     const cart = carts.find((c) => c.id == cartId)
 
     if (!cart) {
-      throw new Error('Cart not found')
+      throw new Error('Carrito no encontrado')
     }
 
     return cart

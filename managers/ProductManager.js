@@ -3,11 +3,11 @@ const path = require('path')
 
 class ProductManager {
   constructor() {
-    this.filePath = path.join(__dirname, '..','data', 'products.json')
+    this.filePath = path.join(__dirname, '..','data', 'productos.json')
   }
 
   async addProduct(product) {
-    const requiredFields = ['title', 'description', 'code', 'price', 'status' , 'stock', 'category']
+    const requiredFields = ['title', 'description', 'price', 'thumbnail', 'code', 'stock' , 'keywords']
 
     for (const field of requiredFields) {
       if (!product[field]) {
@@ -40,7 +40,7 @@ class ProductManager {
     if (product) {
       return product
     } else {
-      throw new Error('Product not found')
+      throw new Error('Producto no encontrado')
     }
   }
 
@@ -48,7 +48,7 @@ class ProductManager {
     const products = await this.getProductsFromFile()
     const productIndex = products.findIndex((p) => p.id == id)
     if (productIndex === -1) {
-      throw new Error('Product not found')
+      throw new Error('Producto no encontrado')
     }
 
     const updatedProduct = { ...products[productIndex], ...updatedFields }
@@ -62,7 +62,7 @@ class ProductManager {
     const productIndex = products.findIndex((p) => p.id == id)
 
     if (productIndex === -1) {
-      throw new Error('Product not found')
+      throw new Error('Producto no encontrado')
     }
 
     products.splice(productIndex, 1)
