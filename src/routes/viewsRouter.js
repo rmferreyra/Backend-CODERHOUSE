@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const ProductManager = require('../../managers/ProductManager')
-const productManager = new ProductManager('productos.json')
+const productManager = require('../../dao/ProductManager')
 
 router.get('/', async (req,res)=>{
   let testUser={
@@ -19,6 +18,21 @@ router.get('/', async (req,res)=>{
     products
   })
 })
+
+router.get('/chat', (req, res) => {
+  let testUser={
+    name:"Rodolfo",
+    lastName:"Ferreyra",
+    role:"admin"
+  }
+  
+  res.render('chat',{
+    user:testUser,
+    style:'index.message.css',
+    isAdmin:testUser.role==="admin",
+  })
+})
+
 
 router.get('/realtimeproducts', async (req,res)=>{
   let testUser={

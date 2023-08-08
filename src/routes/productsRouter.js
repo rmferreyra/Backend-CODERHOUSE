@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const ProductManager = require('../../managers/ProductManager')
+const ProductManager = require('../../dao/ProductManager')
 const productManager = new ProductManager('productos.json')
 
 router.get('/products', async (req, res) => {

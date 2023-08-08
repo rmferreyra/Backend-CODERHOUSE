@@ -1,17 +1,15 @@
-const socket = io()
-
-const productName = document.getElementById("title").value
-const productDescription = document.getElementById("description").value
-const productPrice = document.getElementById("price").value
-const productThumbnails = document.getElementById("thumbnails").value
-const productCode = document.getElementById("code").value
-const productStock = document.getElementById("stock").value
-const productKeywords = document.getElementById("keywords").value
-const productStatus = document.getElementById("status").value
+const socket = io() 
 
 async function addNewProduct() {
+  const productName = document.getElementById("title").value
+  const productDescription = document.getElementById("description").value
+  const productPrice = document.getElementById("price").value
+  const productThumbnails = document.getElementById("thumbnails").value
+  const productCode = document.getElementById("code").value
+  const productStock = document.getElementById("stock").value
+  const productCategory = document.getElementById("category").value
+  const productStatus = document.getElementById("status").value
   try {
-
     const response = await fetch('/realtimeproducts', {
       method: 'POST',
       headers: {
@@ -20,11 +18,12 @@ async function addNewProduct() {
       body: JSON.stringify({
         title: productName,
         description: productDescription,
-        price: productPrice,
-        thumbnails: productThumbnails,
         code: productCode,
+        price: productPrice,
+        status: productStatus,
         stock: productStock,
-        keywords: productKeywords,
+        category: productCategory,
+        thumbnails: productThumbnails
       })
     })
 
@@ -35,11 +34,12 @@ async function addNewProduct() {
       socket.emit('addProduct', {
         title: productName,
         description: productDescription,
-        price: productPrice,
-        thumbnails: productThumbnails,
         code: productCode,
+        price: productPrice,
+        status: productStatus,
         stock: productStock,
-        keywords: productKeywords,
+        category: productCategory,
+        thumbnails: productThumbnails
       })
 
       document.getElementById("new-product-form").reset()
@@ -54,12 +54,12 @@ async function addNewProduct() {
 function deleteProduct(){
   const productTitleDelete = document.getElementById("titleDelete").value
 
-  const elementos = document.querySelectorAll('.card');
+  const elementos = document.querySelectorAll('.card'); 
   elementos.forEach(elemento => {
     const title = elemento.querySelector('.title').textContent
     console.log(title)
     if (title == productTitleDelete) {
-      elemento.style.display = 'none'
+      elemento.style.display = 'none' 
     }
   })
 }
