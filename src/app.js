@@ -3,7 +3,7 @@
   const cartsRouter = require('../src/routes/cartsRouter')
   const viewRourter = require('../src/routes/viewsRouter')
   const mongoose = require('mongoose');
-  mongoose.connect("mongodb+srv://gnigrinis:P72FtiVO5nvaGCwn@cluster0.zt1wb.mongodb.net/ecommerce?retryWrites=true&w=majority")
+  mongoose.connect("mongodb+srv://ferreyra:P99FtiVO5xcvGCwn@cluster7.zv2wb.mongodb.net/ecommerce?retryWrites=true&w=majority")
   .then(() => console.log('se ha conectado a la base de datos'))
   .catch(() => console.log('no se ha conectado a la base de datos'))
   const express = require('express')
@@ -47,5 +47,3 @@
   
   app.use(express.static(__dirname+'/public'))
   })()
-  
-  

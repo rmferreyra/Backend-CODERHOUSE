@@ -1,7 +1,7 @@
 const fs = require('fs').promises
 const path = require('path')
 
-const productModel =require('../models/ProductModel')
+const productModel =require('../models/product.model')
 
 class ProductManager {
 

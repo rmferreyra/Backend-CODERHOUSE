@@ -1,4 +1,4 @@
-const chatMessageManager = require('../../dao/ChatMessageManager')
+const chatMessageManager = require('../../dao/chat.message.manager')
 
 async function socketManager(socket) {
   console.log(`user has connected: ${socket.id}`)

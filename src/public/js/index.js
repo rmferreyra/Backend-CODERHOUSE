@@ -3,13 +3,14 @@ const socket = io()
 async function addNewProduct() {
   const productName = document.getElementById("title").value
   const productDescription = document.getElementById("description").value
-  const productPrice = document.getElementById("price").value
-  const productThumbnails = document.getElementById("thumbnails").value
   const productCode = document.getElementById("code").value
+  const productPrice = document.getElementById("price").value
   const productStock = document.getElementById("stock").value
   const productCategory = document.getElementById("category").value
+  const productThumbnails = document.getElementById("thumbnails").value
   const productStatus = document.getElementById("status").value
   try {
+
     const response = await fetch('/realtimeproducts', {
       method: 'POST',
       headers: {
@@ -34,12 +35,12 @@ async function addNewProduct() {
       socket.emit('addProduct', {
         title: productName,
         description: productDescription,
-        code: productCode,
         price: productPrice,
-        status: productStatus,
+        thumbnails: productThumbnails,
+        code: productCode,
         stock: productStock,
-        category: productCategory,
-        thumbnails: productThumbnails
+        status: productStatus,
+        category: productCategory
       })
 
       document.getElementById("new-product-form").reset()
@@ -59,7 +60,7 @@ function deleteProduct(){
     const title = elemento.querySelector('.title').textContent
     console.log(title)
     if (title == productTitleDelete) {
-      elemento.style.display = 'none' 
+      elemento.style.display = 'none'
     }
   })
 }
