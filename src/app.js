@@ -2,6 +2,7 @@
   const productsRouter = require('../src/routes/productsRouter')
   const cartsRouter = require('../src/routes/cartsRouter')
   const viewRourter = require('../src/routes/viewsRouter')
+  const usersRouter = require('../src/routes/usersRouter')
   const mongoose = require('mongoose');
   mongoose.connect("mongodb+srv://rmferreyra:uUeTHHZbSBN4DYVE@ferreyra.a8odytm.mongodb.net/?retryWrites=true&w=majority")
   .then(() => console.log('se ha conectado a la base de datos'))
@@ -15,6 +16,12 @@
   const io = new Server(server)
   const socketManager = require('../src/websocket/chat.socket')
   io.on('connection', socketManager)
+  
+  const session = require('express-session')
+
+  const MongoStore = require('connect-mongo')
+  
+  const cookieParser = require('cookie-parser')
   
   const port = 8080
   server.listen(port, () => {
@@ -36,9 +43,22 @@
   app.use(express.urlencoded({ extended: true }))
   app.use(express.json())
   
+  app.use(cookieParser('esunsecreto'))
+  app.use(session({
+    secret: 'esunsecreto',
+    resave: true,
+    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://rmferreyra:uUeTHHZbSBN4DYVE@ferreyra.a8odytm.mongodb.net/?retryWrites=true&w=majority',
+      ttl: 60 * 60
+    })
+  }))
+  
   app.use('/api', productsRouter)
   
   app.use('/api', cartsRouter)
+  
+  app.use('/api', usersRouter)
   
   app.use('/', viewRourter)
   app.engine('handlebars', engine())

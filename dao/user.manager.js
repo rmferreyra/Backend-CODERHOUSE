@@ -1,57 +1,24 @@
-const fs = require('fs/promises')
-const path = require('path')
+const userModel = require('../models/user.model')
 
 class UserManager {
 
-  #users = []
-
-  constructor(filename) {
-    this.filename = filename
-    this.filepath = path.join(__dirname, '../data', this.filename)
-  }
-
-  #readFile = async () => {
-    const data = await fs.readFile(this.filepath, 'utf-8')
-    this.#users = JSON.parse(data)
-  }
-
-  #writeFile = async() => {
-    const data = JSON.stringify(this.#users, null, 2)
-    await fs.writeFile(this.filepath, data)
-  }
-
   async getAll() {
-    await this.#readFile()
-
-    return this.#users
+    return userModel.find({}).lean()
   }
 
-  async getById(id) {
-    await this.#readFile()
-
-    return this.#users.find(p => p.id == id)
+  getById(id) {
+    return userModel.find({ _id: id }).lean()
   }
 
-  async create(user) {
-    await this.#readFile()
+  getByEmail(email) {
+    return userModel.findOne({ email }).lean()
+  }
 
-    const id = (this.#users[this.#users.length - 1]?.id || 0) + 1
-
-    const newUser = {
-      ...user,
-      id
-    }
-
-    this.#users.push(newUser)
-
-    await this.#writeFile()
-
-    return newUser
+  create(user) {
+    return userModel.create(user)
   }
 
   async save(id, user) {
-    await this.#readFile()
-
     const existing = await this.getById(id)
 
     if (!existing) {
@@ -62,24 +29,30 @@ class UserManager {
       email,
       firstname,
       lastname,
-      username
+      username,
+      gender,
+      age
     } = user
 
     existing.email = email
     existing.firstname = firstname
     existing.lastname = lastname
     existing.username = username
+    existing.gender = gender
+    existing.age = age
 
-    await this.#writeFile()
+    await existing.updateOne({ _id, existing: _id }, existing)
   }
 
   async delete(id) {
-    await this.#readFile()
+    const existing = await this.getById(id)
 
-    this.#users = this.#users.filter(p => p.id != id)
+    if (!existing) {
+      return
+    }
 
-    await this.#writeFile()
+    await userModel.deleteOne({ _id: id })
   }
 }
 
-module.exports = UserManager
+module.exports = new UserManager()

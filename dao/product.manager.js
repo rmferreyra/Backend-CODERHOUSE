@@ -1,7 +1,7 @@
-const fs = require('fs').promises
 const path = require('path')
 
 const productModel =require('../models/product.model')
+
 
 class ProductManager {
 
@@ -40,6 +40,7 @@ async getProductById(id) {
   async deleteProduct(id) {
     await productModel.deleteOne({_id: id})
   }
+
 }
 
 module.exports = new ProductManager()

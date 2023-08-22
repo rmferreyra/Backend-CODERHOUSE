@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.addEventListener("click", async (event) => {
         event.preventDefault();
         const productId = button.getAttribute("data-product-id");
-  
+        console.log(productId)
         try {
           let cartId = getCartIdFromCookie();
           if (!cartId) {

@@ -6,7 +6,7 @@ router.post('/carts', async (req, res) => {
   try {
     const createdCart = await cartManager.createCart()
     const cartID = createdCart._id.toString()
-    res.cookie('cartID', cartID).status(201).json({ message: 'Carrito createdo con exito' });
+    res.cookie('cartID', cartID).status(201).json({ message: 'Carrito creado con exito' });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -17,7 +17,7 @@ router.post('/carts/:cid/product/:pid', async (req, res) => {
 
   try {
     await cartManager.addProductToCart(cid, pid);
-    res.json({ message: 'Producto agregado al carrito con exito' });
+    res.json({ message: 'Producto agregado con exito' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -28,7 +28,7 @@ router.delete('/carts/:cid/products/:pid', async (req, res) => {
 
   try {
     await cartManager.removeProductFromCart(cid, pid);
-    res.json({ message: 'Producto removido del carrito con exito' });
+    res.json({ message: 'Producto removido con exito' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -39,7 +39,7 @@ router.delete('/carts/:cid', async (req, res) => {
 
   try {
     await cartManager.clearCart(cid);
-    res.json({ message: 'Carrito limpiado con exito' });
+    res.json({ message: 'Carrito limpio con exito' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -63,7 +63,7 @@ router.put('/carts/:cid/products/:pid', async (req, res) => {
 
   try {
     await cartManager.updateCartItemQuantity(cid, pid, quantity);
-    res.json({ message: 'Cantidad actualizada con exito' });
+    res.json({ message: 'Item en carrito actualizado con exito' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

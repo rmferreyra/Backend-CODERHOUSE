@@ -2,29 +2,157 @@ const express = require('express')
 const router = express.Router()
 const productManager = require('../../dao/product.manager')
 const cartManager = require('../../dao/cart.manager')
+const userManager = require('../../dao/user.manager')
+let userSession;
 
 router.get('/', async (req,res)=>{
-  let testUser={
-    name:"Rodolfo",
-    lastName:"Ferreyra",
-    role:"admin"
+  if(req.session.user){
+    const userSession = req.session.user
+    const player={
+      title: 'Home',
+      firstname: userSession.firstname,
+      user: userSession.user,
+      admin: userSession.admin
+    }
+    if (player.admin===true||player.user===true){
+      res.redirect('/products')
+      }
+  } else{
+    res.redirect('/login')
   }
+})
 
-  const products = await productManager.getProducts()
-
-  res.render('index',{
-    user:testUser,
+router.get('/signup', async (req,res)=>{
+  res.render('signup',{
     style:'index.css',
-    isAdmin:testUser.role==="admin",
-    products
   })
+})
+
+router.post('/signup', async (req, res) => {
+  let newUser=req.body
+  let checker = await userManager.getByEmail(newUser.email)
+  if(checker){
+    return res.render('signup',{
+      error: 'El email ya existe'
+    })
+  }
+  
+  try{
+    const createdUser = await userManager.create(newUser) 
+    req.session.user ={
+      firstname: createdUser.firstname,
+      id: createdUser._id,
+      ...createdUser._doc
+    }
+    req.session.save((err) => {
+      res.status(201).redirect('/')
+    })
+  }catch(error){
+    return res.render('signup', {
+      error: 'Ocurrio un error. Probá de nuevo más tarde'
+    })
+  }
+})
+
+router.get('/login', async (req,res)=>{
+  res.render('login',{
+    style:'index.css',
+  })
+})
+
+router.post('/login', async (req, res) => {
+  const email = req.body.email
+
+  if(email == 'admin@coder.com'){
+    const password = req.body.password
+    if(password == 'admin1234'){
+      req.session.user = {
+        firstname: 'Coder',
+        lastname: 'House',
+        email: email,
+        age: 25,
+        user: true,
+        admin: true,
+      }
+      req.session.save((err) => {
+        if(err) {
+          console.error('Error al guardar la sesión:', err)
+        }else{
+          console.log('La session se guardó exitosamente')
+          res.redirect('/')
+        }
+      })
+    }else{
+      const user = await userManager.getByEmail(email)
+      if (!user) {
+        return res.render('login', { 
+          error: 'El usuario no existe' 
+        })
+      }
+    }
+  }else{
+      try {
+        const user = await userManager.getByEmail(email)
+        if (!user) {
+          return res.render('login', { 
+            error: 'El usuario no existe' 
+          })
+        }
+    
+        req.session.user = {
+          firstname: user.firstname,
+          user: user.user,
+          admin: user.admin,
+          ...user
+        }
+        req.session.save((err) => {
+          if(err) {
+            console.error('Error al guardar la sesión:', err)
+          }else{
+            console.log('La session se guardó exitosamente')
+            res.redirect('/')
+          }
+        })
+      } catch(e) {
+        res.render('login', { error: 'Ha ocurrido un error' })
+      }
+    }})
+
+router.get('/logout', (req, res) => {
+
+  res.clearCookie('user')
+
+  req.session.destroy((err) => {
+    if(err) {
+      console.error('Hubo problemas para borrar la session', err)
+    }
+
+    res.render('login', {
+    })
+
+    req.user = null
+  })
+})
+
+router.get('/profile', (req, res) => {
+  if (req.session.user.admin===true||req.session.user.user===true){
+    res.render('profile', {
+      style:'index.css',
+      isAdmin: req.session.user.admin===true,
+      isUser: req.session.user.user===true,
+      ...req.session.user
+    })
+  }else{
+    res.redirect('/login')
+  }
 })
 
 router.get('/chat', (req, res) => {
   let testUser={
     name:"Rodolfo",
     lastName:"Ferreyra",
-    role:"admin"
+    admin: true,
+    user: true,
   }
   
   res.render('chat',{
@@ -35,27 +163,32 @@ router.get('/chat', (req, res) => {
 })
 
 router.get('/products', async (req, res) => {
+  const userSession = req.session.user
+  const userId = req.session.user._id
+
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   try {
     const products = await productManager.getProducts();
-    const cartId = cartManager.getCartIdFromCookie(req);
+    const cartId = cartManager.getCartIdFromCookie(req, userId);
     const totalPages = Math.ceil(products.length / limit);
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedProducts = products.slice(startIndex, endIndex);
 
 
-    let testUser={
-      name:"Rodolfo",
-      lastName:"Ferreyra",
-      role:"admin"
+    const player={
+      title: 'Products',
+      user: userSession.user,
+      admin: userSession.admin
     }
     
     res.render('products', {
-      user: testUser,
+      firstname: userSession.firstname,
+      email: userSession.email,
       style: 'index.css',
-      isAdmin: testUser.role === 'admin',
+      isAdmin: player.admin === true,
+      isUser: player.user === true,
       products: paginatedProducts,
       totalPages,
       prevPage: page > 1 ? page - 1 : null,
@@ -68,29 +201,34 @@ router.get('/products', async (req, res) => {
       nextLink: page < totalPages ? `/products?page=${page + 1}` : null
     });
   } catch (error) {
-    res.status(500).send('Internal server error');
+    res.render('login', {
+    })
   }
 });
 
 router.get('/cart/:cid', async (req, res) => {
   const { cid } = req.params;
+  const userSession = req.session.user
 
   try {
     const cart = await cartManager.getCartWithPopulatedProducts(cid);
 
-    let testUser={
-      name:"Rodolfo",
-      lastName:"Ferreyra",
-      role:"admin"
+    const player={
+      title: 'Cart',
+      user: userSession.user,
+      admin: userSession.admin
     }
     res.render('cart', {
-      user: testUser,
+      user: player.firstname,
       style: 'index.cart.css',
-      isAdmin: testUser.role === 'admin',
+      isAdmin: player.admin === true,
+      isUser: player.user === true,
       cart
     });
   } catch (error) {
-    res.status(404).send('Cart not found');
+    return res.render('cart'),{
+      error: "El carrito está vacio"
+    }
   }
 });
 
@@ -111,6 +249,7 @@ router.get('/realtimeproducts', async (req,res)=>{
   })
 })
 
+//Metodo Post con Web Socket
 router.post('/realTimeProducts', async (req, res) => {
     newProduct=req.body
     try {
