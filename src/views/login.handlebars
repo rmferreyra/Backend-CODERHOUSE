@@ -1,7 +1,7 @@
 <div class="column is-half is-offset-one-quarter is-narrow is-flex is-flex-direction-column	is-justify-content-center	is-align-items-center" style="height: 500px;">
   <h1 class="title is-1">Login</h1>
   <form action="http://localhost:8080/login" method="post">  
-    <div class="field" style="width: 250px">
+    <div class="field" style="width: 300px">
       <p class="control has-icons-left has-icons-right">
         <input class="input" type="text" placeholder="Email" name="email" Requerido>
         <span class="icon is-small is-left">
@@ -29,8 +29,11 @@
         Login
       </button>
     </p>
+  </div>
+  <h6 class="subtitle is-6">
+    <a href="/api/github">Login con Github</a>
+  </h6>
   {{#if error}}
   <h3 class="title is-5">{{error}}</h3>
   {{/if}}
-  </div>
 </div>  

@@ -1,59 +1,90 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const addToCartButtons = document.querySelectorAll(".add-to-cart");
-    const viewCartButton = document.getElementById("viewCartButton");
-  
-    viewCartButton.addEventListener("click", (event) => {
-      event.preventDefault();
-  
-      const cartId = getCartIdFromCookie();
-      if (cartId) {
-        window.location.href = `/cart/${cartId}`;
-      } else {
-        console.error("Carrito ID no encontrado en cookies.");
+  const addToCartButtons = document.querySelectorAll(".add-to-cart")
+  const viewCartButton = document.getElementById("viewCartButton")
+  const cleanCart = document.querySelectorAll(".clean-cart")
+
+  viewCartButton.addEventListener("click", async (event) => {
+    event.preventDefault()
+    let cartId = getCartIdFromCookie()
+    if (cartId) {
+      window.location.href = `/cart/${cartId}`
+    } else {
+      const response = await fetch(`http://localhost:8080/api/carts`, {
+            method: "POST",
+          })
+          if (response.ok) {
+            const responseData = await response.json()
+            cartId = responseData.cartID
+            document.cookie = `cartID=${cartId}`
+            window.location.href = `/cart/${cartId}`
+          } else {
+            alert("Error en la creacion del carrito")
+            return
+          }
+    }
+  })
+
+  cleanCart.forEach(button => {
+    button.addEventListener("click", async (event)=>{
+      event.preventDefault()
+      let cartId = getCartIdFromCookie()
+      if (cartId){
+        const response = await fetch(`http://localhost:8080/api/carts/${cartId}`, {
+          method: "DELETE",
+        })
+        if (response.ok) {
+          location.reload()
+        } else {
+          alert("Error al vaciar el carrito, intente luego.")
+          return
+        }      
       }
-    });
-  
-    function getCartIdFromCookie() {
-      const cookiesSplitt = document.cookie.split(';')
-      const cookiestrim = cookiesSplitt[0].trim().split("=")
-      const cartID = cookiestrim[1]
-      return cartID
+    })
+  })
+
+
+  function getCartIdFromCookie() {
+    const cookiesSplitt = document.cookie.split(';');
+    const cartCookie = cookiesSplitt.find(cookie => cookie.trim().startsWith('cartID='));
+    
+    if (cartCookie) {
+      const [, cartId] = cartCookie.trim().split('=');
+      return cartId;
     }
     
-    addToCartButtons.forEach(button => {
-      button.addEventListener("click", async (event) => {
-        event.preventDefault();
-        const productId = button.getAttribute("data-product-id");
-        console.log(productId)
-        try {
-          let cartId = getCartIdFromCookie();
-          if (!cartId) {
-            const response = await fetch(`http://localhost:8080/api/carts`, {
-              method: "POST",
-            });
-            if (response.ok) {
-              console.log(response)
-              const responseData = await response.json();
-              cartId = responseData.newCart._id;
-              document.cookie = `cartID=${cartId}`;
-            } else {
-              alert("Hubo un problema al crear el carrito");
-              return;
-            }
-          }
-  
-          const response = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, {
+    return null; 
+  }
+
+  addToCartButtons.forEach(button => {
+    button.addEventListener("click", async (event) => {
+      event.preventDefault()
+      const productId = button.getAttribute("data-product-id")
+      try {
+        let cartId = getCartIdFromCookie()
+        if (!cartId) {
+          const response = await fetch(`http://localhost:8080/api/carts`, {
             method: "POST",
-          });
+          })
           if (response.ok) {
-            alert("Producto agregado al carrito exitosamente");
+            const responseData = await response.json()
+            cartId = responseData.newCart._id
+            document.cookie = `cartID=${cartId}`
           } else {
-            alert("Hubo un problema al agregar el producto al carrito");
+            alert("Error al crear el carrito")
+            return
           }
-        } catch (error) {
-          console.error("Error al realizar la solicitud:", error);
         }
-      });
-    });
-  });
-  
+        const response = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, {
+          method: "POST",
+        })
+        if (response.ok) {
+          alert("Producto agregado al carrito con exito")
+        } else {
+          alert("Error al agregar el producto al carrito")
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error)
+      }
+    })
+  })
+})

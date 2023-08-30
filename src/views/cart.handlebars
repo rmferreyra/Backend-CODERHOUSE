@@ -18,8 +18,11 @@
       </div>
     {{/each}}
   </div>
+  <div class="is-flex is-justify-content-center	">
+    <a href="#" class="button is-danger clean-cart" data-product-id="{{this._id}}">Vaciar carrito</a>
+  </div>
 {{else}}
-  <p>No tienes permisos para ver el carrito de compras</p>
+  <p>No tenes permisos para ver el carrito</p>
 {{/if}}
 {{#if error}}
 <h3 class="title is-5">{{error}}</h3>
