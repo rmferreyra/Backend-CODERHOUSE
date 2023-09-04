@@ -1,10 +1,11 @@
 (async () =>{
   const productsRouter = require('../src/routes/productsRouter')
   const cartsRouter = require('../src/routes/cartsRouter')
-  const viewRourter = require('../src/routes/viewsRouter')
+  const viewRouter = require('../src/routes/viewsRouter')
   const usersRouter = require('../src/routes/usersRouter')
   const authRouter = require('../src/routes/auth.router')
-  
+  const sessionsRouter = require("../src/routes/sessions.router");
+
   const passport = require('passport')
   const initPassportLocal = require('../config/passport.local.config')
   
@@ -79,7 +80,9 @@ app.use('/api', usersRouter)
 
 app.use('/api', authRouter)
 
-app.use('/', viewRourter)
+app.use("/api", sessionsRouter);
+
+app.use('/', viewRouter)
 app.engine('handlebars', engine())
 app.set('views',__dirname+'/views')
 app.set('view engine', 'handlebars')

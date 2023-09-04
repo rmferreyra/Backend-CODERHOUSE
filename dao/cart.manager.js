@@ -1,15 +1,29 @@
-const path = require('path')
-
 const cartModel = require('../models/cart.model');
 
+async function getCartIdByEmail(email) {
+  try {
+    const user = await userModel.findOne({ email });
+    if (user) {
+      return user.cart;
+    } else {
+      throw new Error("Usuario no encontrado");
+    }
+  } catch (error) {
+    throw new Error(
+      "Error al obtener el carrito del usuario: " + error.message
+    );
+  }
+}
 
+module.exports = { getCartIdByEmail };
 class CartManager {
-  async createCart() {
+  async createCart(email) {
     const newCart = new cartModel({
-      products: []
+      products: [],
+      email: email,
     });
-    await newCart.save()
-    return newCart._id
+    await newCart.save();
+    return newCart._id;
   }
 
   async addProductToCart(cartId, productId) {
@@ -77,9 +91,12 @@ class CartManager {
   
   async getCartWithPopulatedProducts(cartId) {
     try {
-      const cart = await cartModel.findById(cartId).populate('products.product').lean();
+      const cart = await cartModel
+        .findById(cartId)
+        .populate("products.product")
+        .lean();
       if (!cart) {
-        throw new Error('Carrito no encontrado');
+        throw new Error("Carrito no encontrado");
       }
       return cart;
     } catch (error) {
@@ -93,15 +110,32 @@ class CartManager {
       return null;
     }
 
-    const cookieArray = cookies.split(';');
-    const cartCookie = cookieArray.find(cookie => cookie.trim().startsWith('cartId='));
+    const cookieArray = cookies.split("");
+    const cartCookie = cookieArray.find((cookie) =>
+      cookie.trim().startsWith("cartId=")
+    );
 
     if (cartCookie) {
-      const [, cartId] = cartCookie.trim().split('=');
+      const [, cartId] = cartCookie.trim().split("=");
       return cartId;
     }
 
     return null;
+  }
+
+  async getCartIdByEmail(email) {
+    try {
+      const user = await cartModel.findOne({ email });
+      if (user) {
+        return user;
+      } else {
+        throw new Error("Usuario no encontrado");
+      }
+    } catch (error) {
+      throw new Error(
+        "Error al obtener el carrito del usuario: " + error.message
+      );
+    }
   }
 }
 module.exports = new CartManager();

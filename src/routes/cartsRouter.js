@@ -83,4 +83,14 @@ router.get('/cart/:cid', async (req, res) => {
   }
 })
 
+router.get("/carts/:email", async (req, res) => {
+  const { email } = req.params
+  try {
+    const user = await cartManager.getCartIdByEmail(email)
+    res.json(user._id)
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})
+
 module.exports = router

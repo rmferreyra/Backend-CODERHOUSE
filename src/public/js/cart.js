@@ -2,27 +2,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const addToCartButtons = document.querySelectorAll(".add-to-cart")
   const viewCartButton = document.getElementById("viewCartButton")
   const cleanCart = document.querySelectorAll(".clean-cart")
+  const email = document.querySelector(".email").textContent.trim();
 
   viewCartButton.addEventListener("click", async (event) => {
     event.preventDefault()
-    let cartId = getCartIdFromCookie()
-    if (cartId) {
-      window.location.href = `/cart/${cartId}`
+
+    let cartId = getCartIdFromCookie();
+    if (cartId != null) {
+      window.location.href = `/cart/${cartId}`;
     } else {
-      const response = await fetch(`http://localhost:8080/api/carts`, {
-            method: "POST",
-          })
-          if (response.ok) {
-            const responseData = await response.json()
-            cartId = responseData.cartID
-            document.cookie = `cartID=${cartId}`
-            window.location.href = `/cart/${cartId}`
-          } else {
-            alert("Error en la creacion del carrito")
-            return
-          }
+      const response = await fetch(`http://localhost:8080/api/carts/${email}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        cartId = responseData;
+        document.cookie = `cartID=${cartId}`;
+        window.location.href = `/cart/${cartId}`;
+      } else {
+        alert("Hubo un error en el carrito");
+        return;
+      }
     }
-  })
+  });
 
   cleanCart.forEach(button => {
     button.addEventListener("click", async (event)=>{
@@ -44,15 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function getCartIdFromCookie() {
-    const cookiesSplitt = document.cookie.split(';');
-    const cartCookie = cookiesSplitt.find(cookie => cookie.trim().startsWith('cartID='));
-    
+    const cookiesSplitt = document.cookie.split(";");
+    const cartCookie = cookiesSplitt.find((cookie) =>
+      cookie.trim().startsWith("cartID=")
+    );
+
     if (cartCookie) {
-      const [, cartId] = cartCookie.trim().split('=');
+      const [, cartId] = cartCookie.trim().split("=");
       return cartId;
     }
-    
-    return null; 
+
+    return null;
   }
 
   addToCartButtons.forEach(button => {

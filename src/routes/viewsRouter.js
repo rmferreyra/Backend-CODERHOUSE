@@ -16,7 +16,7 @@ router.get('/', async (req,res)=>{
       user: userSession.user,
       admin: userSession.admin
     }
-    if (player.admin===true||player.user===true){
+    if (player.role === "user" || player.role === "admin") {
       res.redirect('/products')
       }
   } else{
@@ -132,10 +132,9 @@ const login = async (req, res) => {
 
         req.session.user = {
           firstname: user.firstname,
-          user: user.user,
-          admin: user.admin,
-          ...user
-        }
+          role: user.role,
+          ...user,
+          }
         req.session.save((err) => {
           if(err) {
             console.error('Error al guardar la sesion:', err)
@@ -155,11 +154,11 @@ router.post('/login', passport.authenticate('local-login', {
   if(!req.user) returnres.status(400).send({status:'error', error:"Credenciales incorrectas"})
   req.session.user = {
     firstname: req.user.firstname,
-    user: req.user.user,
-    admin: req.user.admin,
-    ...req.user
-  }
-  req.session.save((err) => {
+    role: req.user.role,
+    cart: req.user.cart,
+    ...req.user,
+  };
+req.session.save((err) => {
     if(err) {
       console.error('Error al guardar la sesion:', err)
     }else{
@@ -186,17 +185,16 @@ router.get('/logout', (req, res) => {
   })
 })
 
-router.get('/profile', (req, res) => {
-
-  if (req.session.user.admin===true||req.session.user.user===true){
-    res.render('profile', {
-      style:'index.css',
-      isAdmin: req.session.user.admin===true,
-      isUser: req.session.user.user===true,
-      ...req.session.user
+router.get("/profile", (req, res) => {
+  if (req.session.user.role === "admin" || req.session.user.role === "user") {
+    res.render("profile", {
+      style: "index.css",
+      isAdmin: req.session.user.role === "admin",
+      isUser: req.session.user.role === "user",
+      ...req.session.user,
     })
-  }else{
-    res.redirect('/login')
+  } else {
+    res.redirect("/login")
   }
 })
 
@@ -231,17 +229,16 @@ router.get('/products', async (req, res) => {
 
 
     const player={
-      title: 'Products',
-      user: userSession.user,
-      admin: userSession.admin
+      title: "Products",
+      role: userSession.role,
     }
     
     res.render('products', {
       firstname: userSession.firstname,
       email: userSession.email,
       style: 'index.css',
-      isAdmin: player.admin === true,
-      isUser: player.user === true,
+      isAdmin: player.role === "admin",
+      isUser: player.role === "user",
       products: paginatedProducts,
       totalPages,
       prevPage: page > 1 ? page - 1 : null,
@@ -268,14 +265,13 @@ router.get('/cart/:cid', async (req, res) => {
 
     const player={
       title: 'Cart',
-      user: userSession.user,
-      admin: userSession.admin
+      role: userSession.role,
     }
     res.render('cart', {
       firstname: userSession.firstname,
       style: 'index.cart.css',
-      isAdmin: player.admin === true,
-      isUser: player.user === true,
+      isAdmin: player.role === "admin",
+      isUser: player.role === "user",
       cart
     })
   } catch (error) {
