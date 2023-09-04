@@ -1,3 +1,3 @@
 # Proyecto Curso BACKEND - Coderhouse
 eCommerce
-- Desafio.
+- 2da Práctica Integradora.
