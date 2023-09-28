@@ -1,54 +1,61 @@
-const GitHubStrategy = require('passport-github2')
-const userManager = require('../dao/user.manager')
+const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = require("./config");
+const GitHubStrategy = require("passport-github2"); 
+const userManager = require("../dao/user.manager");
+const cartManager = require("../dao/cart.manager");
 
-const CLIENT_ID = "Iv1.6704a6ecc19d2cca"
-const CLIENT_SECRET = "1718a748c2ae12bdc44b3f62290e23b9cb4377fa"
-const CALLBACK_URL = 'http://localhost:8080/githubSessions'
+const CLIENT_ID = GITHUB_CLIENT_ID;
+const CLIENT_SECRET = GITHUB_CLIENT_SECRET;
+const CALLBACK_URL = "http://localhost:8080/api/github/callback";
 
 const auth = async (accessToken, refreshToken, profile, done) => {
 
-    try {
-        console.log(profile)
+  try {
+    const {
+      _json: { name, email },
+    } = profile;
 
-        const { _json: { name, email } } = profile
+    console.log(name, email);
 
-        console.log(name, email)
-
-        if (!email) {
-            console.log('El usuario no tiene su email publico')
-            return done(null, false)
-        }
-
-        let user = await userManager.getByEmail(email)
-
-        if (!user) {
-            const [ firstname, lastname] = name.split(' ')
-            const _user = await userManager.create({
-                firstname,
-                lastname,
-                email,
-                age: 25,
-                gender: 'Male'
-            })
-
-            user = _user._doc
-        }
-        
-        done(null, user)
-    } catch (e) {
-        console.log(e)
-        done(e, false)
+    if (!email) {
+      console.log("el usuario no tiene su email publico");
+      return done(null, false);
     }
 
-}
+    let user = await userManager.getByEmail(email);
+    if (!user) {
+
+      if (name === null) {
+        console.log("usuario no tiene nombre definido en github");
+      }
+
+      const [firstname, lastname] = name.split(" ");
+      const _user = await userManager.create({
+        firstname,
+        lastname,
+        email,
+        age: 38,
+        gender: "Male",
+        cart: await cartManager.createCart(email),
+      });
+
+      console.log(_user);
+      user = _user._doc;
+    }
+
+    done(null, user);
+  } catch (e) {
+    console.log(e);
+    done(e, false);
+  }
+};
 
 const gitHubHandler = new GitHubStrategy(
-    {
-        clientID: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        callbackURL: CALLBACK_URL
-    },
-    auth
-)
+  {
+    clientID: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    callbackURL: CALLBACK_URL,
+  },
+  auth
+);
 
-module.exports = gitHubHandler
+module.exports = gitHubHandler;
