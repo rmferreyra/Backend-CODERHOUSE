@@ -1,4 +1,5 @@
 const { Command } = require("commander");
+const logger = require("./logger")
 
 const program = new Command();
 

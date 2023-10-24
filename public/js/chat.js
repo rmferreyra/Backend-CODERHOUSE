@@ -1,6 +1,8 @@
 const socket = io()
 const messagesEl = document.querySelector('#messages')
 const inputElement = document.querySelector('.inputBox input')
+const logger = require("../../logger")
+logger.info(new Date())
 
 console.log(new Date())
 

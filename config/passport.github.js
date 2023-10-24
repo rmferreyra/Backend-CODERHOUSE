@@ -2,6 +2,7 @@ const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = require("./config");
 const GitHubStrategy = require("passport-github2"); 
 const userManager = require("../dao/user.manager");
 const cartManager = require("../dao/cart.manager");
+const logger = require("../logger");
 
 const CLIENT_ID = GITHUB_CLIENT_ID;
 const CLIENT_SECRET = GITHUB_CLIENT_SECRET;
@@ -14,7 +15,7 @@ const auth = async (accessToken, refreshToken, profile, done) => {
       _json: { name, email },
     } = profile;
 
-    console.log(name, email);
+    logger.debug(name, email)
 
     if (!email) {
       console.log("el usuario no tiene su email publico");
@@ -25,7 +26,7 @@ const auth = async (accessToken, refreshToken, profile, done) => {
     if (!user) {
 
       if (name === null) {
-        console.log("usuario no tiene nombre definido en github");
+        logger.error("Usuario no tiene nombre definido en github")
       }
 
       const [firstname, lastname] = name.split(" ");

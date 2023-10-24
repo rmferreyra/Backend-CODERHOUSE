@@ -75,7 +75,7 @@ router.get("/:cartId/purchase", auth.authorizeUser, async (req, res) => {
     }),
   };
 
-  console.log(po);
+  logger.debug(po)
 
   res.send(po);
 });

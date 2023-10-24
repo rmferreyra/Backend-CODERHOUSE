@@ -6,6 +6,7 @@ const jwt = require("../config/passport.jwt.config");
 const cartManager = require("../dao/cart.manager");
 const userManager = require("../dao/user.manager");
 const { hashPassword, isValidPassword } = require("../utils/passwords.utils");
+const logger = require("../logger");
 
 const LocalStrategy = local.Strategy;
 
@@ -15,7 +16,7 @@ const signup = async (req, email, password, done) => {
   const _user = await userManager.getByEmail(email);
 
   if (_user) {
-    console.log("usuario ya existe");
+    logger.error("usuario ya existe")
     return done(null, false);
   }
 
@@ -43,7 +44,7 @@ const login = async (req, email, password, done) => {
   try {
     console.log(email, password);
     const user = await userManager.getByEmail(email);
-    console.log(user);
+    logger.debug(user)
     if (!user) {
       console.log("usuario no existe");
       return done(null, false);
@@ -59,7 +60,7 @@ const login = async (req, email, password, done) => {
     }
     done(null, user);
   } catch (e) {
-    console.log("ha ocurrido un error");
+    logger.error("ha ocurrido un error")
     done(e, false);
   }
 };

@@ -1,7 +1,7 @@
 const chatMessageManager = require('../dao/chat.message.manager')
-
+const logger = require("../logger")
 async function socketManager(socket) {
-  console.log(`user has connected: ${socket.id}`)
+  logger.debug(`user has connected: ${socket.id}`)
 
   const messages = await chatMessageManager.getAll()
   socket.emit('chat-messages', messages)

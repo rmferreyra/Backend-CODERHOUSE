@@ -1,3 +1,4 @@
+const logger = require("../logger")
 class BaseManager {
     constructor(model) {
       this.model = model;
@@ -8,7 +9,6 @@ class BaseManager {
     }
   
     getAllPaged(page = 1, limit = 5) {
-      console.log("BaseManager");
   
       return this.model.paginate({}, { limit, page, lean: true });
     }

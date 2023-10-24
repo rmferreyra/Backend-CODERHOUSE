@@ -1,7 +1,5 @@
-const path = require('path')
-
-const productModel =require('../models/product.model')
-
+const { generateProducts } = require("../utils/mock.utils")
+const productModel = require("../models/product.model")
 
 class ProductManager {
 
@@ -22,6 +20,10 @@ class ProductManager {
     return products
   }
 
+  async getMockProducts() {
+    return generateProducts()
+  }
+
 async getProductById(id) {
   const product = await productModel.findOne({ _id: id });
 
@@ -31,7 +33,6 @@ async getProductById(id) {
     throw new Error('Producto no encontrado');
   }
 }
-
 
   async updateProduct(id, product) {
     await productModel.updateOne({ _id: id }, product)

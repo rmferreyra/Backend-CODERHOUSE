@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const passport = require("passport");
+const logger = require("../logger");
 
 const userManager = require("../dao/user.manager");
 const { generateToken } = require("../utils/jwt.utils");
@@ -105,8 +106,6 @@ router.get(
     }
   },
   (req, res) => {
-    console.log(req.user);
-
     res.sendStatus(200);
   }
 );

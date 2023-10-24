@@ -1,11 +1,12 @@
 const jwt = require('passport-jwt')
 const { authToken } = require('../src/utils/jwt.utils')
+const logger = require("../logger")
 
 const JWTStrategy = jwt.Strategy
 const ExtractJWT = jwt.ExtractJwt
 
 const handler = (token, done) => {
-    console.log(token)
+    logger.debug(token)
     try {
         if(!authToken(token)) {
             done(null, false, 'El token es invalido')
@@ -13,7 +14,7 @@ const handler = (token, done) => {
             done(null, token)
         }
     } catch (e) {
-        console.log('error', e)
+        logger.error("error", e)
         done(e)
     }
 }

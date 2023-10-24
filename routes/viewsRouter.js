@@ -5,6 +5,7 @@ const cartManager = require("../dao/cart.manager");
 const userManager = require("../dao/user.manager");
 const { hashPassword, isValidPassword } = require("../utils/passwords.utils");
 const auth = require("../utils/auth.middleware");
+const logger = require("../logger")
 
 const passport = require("passport");
 
@@ -277,7 +278,6 @@ router.get("/products", async (req, res) => {
 router.get("/cart/:cid", async (req, res) => {
   const { cid } = req.params;
   const userSession = req.session.user;
-  console.log(userSession);
   try {
     const cart = await cartManager.getCartWithPopulatedProducts(cid);
 
@@ -352,5 +352,16 @@ router.get("/managment", async (req, res) => {
     res.redirect("/products");
   }
 });
+
+router.get("/loggerTest", (req, res) => {
+
+  logger.error("Este es un mensaje de nivel error")
+  logger.warn("Este es un mensaje de nivel warn")
+  logger.info("Este es un mensaje de nivel info")
+  logger.http("Este es un mensaje de nivel http")
+  logger.debug("Este es un mensaje de nivel debug")
+
+  res.send("Mensajes de logger enviados")
+})
 
 module.exports = router;

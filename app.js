@@ -26,6 +26,9 @@
   const sessionsRouter = require("./routes/sessions.router");
   const notificationsRoutes = require ("./routes/notifications.router")
 
+  const loggerMiddleware = require("./utils/logger.midddleware")
+  const logger = require("./logger")
+
   const passport = require("passport");
   const initPassportLocal = require("./config/passport.local.config");
 
@@ -70,6 +73,8 @@
     });
   });
 
+  app.use(loggerMiddleware)
+
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
@@ -106,6 +111,15 @@
   app.use("/api", sessionsRouter);
 
   app.use("/api", notificationsRoutes)
+
+  app.use((err, req, res, next) => {
+    logger.error(err.message)
+
+    res.send({
+      success: false,
+      error: err.stack,
+    })
+  })
 
   app.use("/", viewRouter);
   app.engine("handlebars", engine());
