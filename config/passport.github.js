@@ -39,13 +39,13 @@ const auth = async (accessToken, refreshToken, profile, done) => {
         cart: await cartManager.createCart(email),
       });
 
-      console.log(_user);
+      logger.debug(_user)
       user = _user._doc;
     }
 
     done(null, user);
   } catch (e) {
-    console.log(e);
+    logger.error(e)
     done(e, false);
   }
 };

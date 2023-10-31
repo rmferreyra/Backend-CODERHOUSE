@@ -1,4 +1,3 @@
-// ENUM
 const ErrorType = {
     DB: "Error en data base",
     General: "Error general en la app",
@@ -17,4 +16,3 @@ const ErrorType = {
     CustomError,
     ErrorType,
   }
-  

@@ -13,8 +13,6 @@ class SmsSender {
       from: config.twilio.TWILIO_PHONE,
       to
     })
-
-    console.log(response)
   }
 }
 

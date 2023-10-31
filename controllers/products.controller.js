@@ -1,6 +1,7 @@
 const productManager = require("../dao/product.manager")
 const { CustomError, ErrorType } = require("../errors/custom.error")
 const productModel = require("../models/product.model")
+const logger = require("../logger")
 
 const getAll = async (req, res, next) => {
   try {

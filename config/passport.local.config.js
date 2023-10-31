@@ -36,17 +36,17 @@ const signup = async (req, email, password, done) => {
       ...newUser._doc,
     });
   } catch (e) {
-    console.log("ha ocurrido un error");
+    logger.error("ha ocurrido un error")
     done(e, false);
   }
 };
 const login = async (req, email, password, done) => {
   try {
-    console.log(email, password);
+    logger.debug(email, password)
     const user = await userManager.getByEmail(email);
     logger.debug(user)
     if (!user) {
-      console.log("usuario no existe");
+      logger.error("usuario no existe")
       return done(null, false);
     }
 
@@ -55,7 +55,7 @@ const login = async (req, email, password, done) => {
     }
 
     if (!isValidPassword(password, user.password)) {
-      console.log("credenciales no coinciden");
+      logger.error("credenciales no coinciden")
       return done(null, false);
     }
     done(null, user);

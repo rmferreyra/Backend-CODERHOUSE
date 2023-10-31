@@ -13,6 +13,8 @@ const {
 
 router.get("/products", getAll);
 
+router.get("/mockingproducts", getAllMNock)
+
 router.get("/", getBase);
 
 router.get("/products/:id", getById);

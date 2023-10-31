@@ -99,9 +99,9 @@ const login = async (req, res) => {
       };
       req.session.save((err) => {
         if (err) {
-          console.error("Error al guardar la sesion:", err);
+          logger.error("Error al guardar la sesión:", err)
         } else {
-          console.log("La sesion se guardo exitosamente");
+          logger.debug("La session se guardó exitosamente")
           res.redirect("/");
         }
       });
@@ -141,9 +141,9 @@ const login = async (req, res) => {
       };
       req.session.save((err) => {
         if (err) {
-          console.error("Error al guardar la sesión:", err);
+          logger.error("Error al guardar la sesión:", err)
         } else {
-          console.log("La sesion se guardo exitosamente");
+          logger.debug("La session se guardó exitosamente")
           res.redirect("/");
         }
       });
@@ -186,7 +186,7 @@ router.get("/logout", (req, res) => {
   res.clearCookie("cartID");
   req.session.destroy((err) => {
     if (err) {
-      console.error("Hubo problemas para borrar la sesion", err);
+      logger.error("Hubo problemas para borrar la session", err)
     }
 
     res.render("login", {});

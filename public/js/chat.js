@@ -4,9 +4,7 @@ const inputElement = document.querySelector('.inputBox input')
 const logger = require("../../logger")
 logger.info(new Date())
 
-console.log(new Date())
-
-messagesEl.innerHTML = ""
+  messagesEl.innerHTML = ""
 
 const appendMessageElement = (user, time, msg) => {
   const div = document.createElement('div')
@@ -39,7 +37,7 @@ const appendUserActionElement = (user, joined) => {
 }
 
 let username = null
-let currentMessages = []
+let currentMessages = []  
 
 socket.on('chat-messages', (messagesList) => {
   currentMessages = messagesList
